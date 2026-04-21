@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { useUser, useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaSignOutAlt } from "react-icons/fa";
-import { Navbar } from "../components"
+import { Navbar } from "../components";
 
 function Profile() {
-  const { user } = useUser();       
-  const { signOut } = useAuth();     
+  const { user } = useUser();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("ads");
 
@@ -37,7 +37,7 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex justify-center py-12 px-4 font-[Lexend]">
-      <Navbar/>
+      <Navbar />
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-lg p-8 mt-20">
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-12">
@@ -53,7 +53,9 @@ function Profile() {
           </div>
 
           <div className="flex-1 flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-[#0C0D19]">{currentUser.name}</h1>
+            <h1 className="text-3xl font-bold text-[#0C0D19]">
+              {currentUser.name}
+            </h1>
             <p className="text-gray-600">{currentUser.email}</p>
             <p className="text-[#177529] font-medium">Verified User</p>
 
@@ -78,7 +80,10 @@ function Profile() {
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-10">
           {Object.entries(currentUser.stats).map(([key, value]) => (
-            <div key={key} className="bg-[#F9FAFB] rounded-xl shadow p-6 text-center">
+            <div
+              key={key}
+              className="bg-[#F9FAFB] rounded-xl shadow p-6 text-center"
+            >
               <p className="text-2xl font-bold text-[#177529]">{value}</p>
               <p className="text-gray-600 capitalize">{key}</p>
             </div>
@@ -104,15 +109,29 @@ function Profile() {
           </div>
 
           <div className="mt-6 min-h-[120px] text-gray-600">
-            {activeTab === "ads" && `You have posted ${currentUser.stats.ads} ads.`}
-            {activeTab === "sells" && `You have completed ${currentUser.stats.sells} sales.`}
-            {activeTab === "buys" && `You have made ${currentUser.stats.buys} purchases.`}
+            {activeTab === "ads" && (
+              <>
+                <p>You have posted {currentUser.stats.ads} ads.</p>
+                <button
+                  className="px-4 py-2 bg-[#177529] text-white rounded-xl hover:brightness-110 transition-all flex items-center gap-2"
+                  onClick={() => navigate("/add-listing")}
+                >
+                  Add Listing
+                </button>
+              </>
+            )}
+            {activeTab === "sells" &&
+              `You have completed ${currentUser.stats.sells} sales.`}
+            {activeTab === "buys" &&
+              `You have made ${currentUser.stats.buys} purchases.`}
           </div>
         </div>
 
         {/* About */}
         <div className="mt-10">
-          <h2 className="text-xl font-semibold text-[#0C0D19] mb-4">About Me</h2>
+          <h2 className="text-xl font-semibold text-[#0C0D19] mb-4">
+            About Me
+          </h2>
           <p className="text-gray-600">{currentUser.about}</p>
         </div>
       </div>

@@ -73,7 +73,7 @@ function ProductDetail() {
 
       try {
         const response = await fetch(
-          `${STRAPI_URL}/api/products?filters[category][slug][$eq]=${product.categorySlug}&filters[id][$ne]=${id}&populate=*`,
+          `${STRAPI_URL}/api/products?filters[category][slug][$eq]=${product.categorySlug}&filters[documentId][$ne]=${id}&populate=*`,
         );
 
         if (!response.ok) throw new Error("Failed to fetch related");
