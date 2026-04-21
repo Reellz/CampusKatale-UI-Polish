@@ -74,7 +74,7 @@ function Auth() {
                   dividerLine: "bg-[#97C040]",
                   dividerText: "font-[Lexend] text-gray-400",
                   alertText: "font-[Lexend]",
-                  // Hide Clerk's built-in "Don't have an account?" link — our tabs handle switching
+                  // Hide Clerk's built-in "Don't have an account?" link 
                   footer: "hidden",
                 },
               }}
