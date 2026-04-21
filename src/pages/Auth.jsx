@@ -197,7 +197,7 @@ function Auth() {
         
         await signIn.authenticateWithRedirect({
           strategy: clerkProvider,
-          redirectUrl: "/sso-callback",
+          redirectUrl: "/",
           redirectUrlComplete: "/",
         });
       } else {
