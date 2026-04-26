@@ -33,7 +33,9 @@ function RoleCard({ role, selected, onClick, disabled }) {
       >
         {isBuyer ? "🛍️" : "🏪"}
       </div>
-      <p className={`font-bold text-sm ${selected ? "text-[#0C0D19]" : "text-gray-600"}`}>
+      <p
+        className={`font-bold text-sm ${selected ? "text-[#0C0D19]" : "text-gray-600"}`}
+      >
         {isBuyer ? "I'm a Buyer" : "I'm a Vendor"}
       </p>
       <p className="text-xs text-gray-400 mt-1 leading-relaxed">
@@ -58,7 +60,9 @@ function RoleCard({ role, selected, onClick, disabled }) {
 function VendorPendingBadge() {
   return (
     <div className="mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs leading-relaxed">
-      <span className="font-semibold block mb-0.5">⏳ Vendor accounts require approval</span>
+      <span className="font-semibold block mb-0.5">
+        ⏳ Vendor accounts require approval
+      </span>
       After signing up, your store will be reviewed before going live. You'll
       receive an email once approved.
     </div>
@@ -69,7 +73,9 @@ function VendorPendingBadge() {
 function RejectedBadge() {
   return (
     <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
-      <span className="font-semibold block mb-0.5">❌ Vendor application not approved</span>
+      <span className="font-semibold block mb-0.5">
+        ❌ Vendor application not approved
+      </span>
       Your vendor application was not approved. You can continue as a buyer or
       contact support for more information.
     </div>
@@ -107,9 +113,9 @@ const clerkAppearance = (isVendor) => ({
 
 // ─── Main component ───────────────────────────────────────────────────────
 export default function Auth() {
-  const [role, setRole] = useState(null);     // "user" | "vendor" | null
+  const [role, setRole] = useState(null); // "user" | "vendor" | null
   const [mode, setMode] = useState("signIn"); // "signIn" | "signUp"
-  const [step, setStep] = useState("role");   // "role" | "auth"
+  const [step, setStep] = useState("role"); // "role" | "auth"
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -127,14 +133,18 @@ export default function Auth() {
     const userRole = user.publicMetadata?.role;
     const vendorStatus = user.publicMetadata?.vendorStatus;
 
+    // In the useEffect inside Auth.jsx
     if (userRole === "vendor") {
       if (vendorStatus === "approved") {
-        navigate("/vendor/dashboard", { replace: true });
+        // Check if they've completed onboarding
+        if (!user.publicMetadata?.onboardingComplete) {
+          navigate("/vendor/onboarding", { replace: true });
+        } else {
+          navigate("/vendor/dashboard", { replace: true });
+        }
       } else if (vendorStatus === "rejected") {
-        // Send back to auth with an error flag — don't leave them stranded
         navigate("/auth?error=vendor_rejected", { replace: true });
       } else {
-        // pending (default for new vendors)
         navigate("/vendor/pending", { replace: true });
       }
     } else {
@@ -167,7 +177,11 @@ export default function Auth() {
   const RoleStep = (
     <div className="w-full max-w-md mx-auto">
       <div className="flex justify-center mb-8">
-        <img src={getImageUrl(logo)} alt="Campus Katale" className="h-16 w-auto" />
+        <img
+          src={getImageUrl(logo)}
+          alt="Campus Katale"
+          className="h-16 w-auto"
+        />
       </div>
 
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
@@ -212,9 +226,11 @@ export default function Auth() {
 
         {/* Role cards — only required for sign up */}
         <div className="mb-2">
-          <p className={`text-xs font-medium mb-3 ${
-            mode === "signIn" ? "text-gray-300" : "text-gray-500"
-          }`}>
+          <p
+            className={`text-xs font-medium mb-3 ${
+              mode === "signIn" ? "text-gray-300" : "text-gray-500"
+            }`}
+          >
             {mode === "signIn"
               ? "Role is remembered from your account"
               : "Select your account type"}
@@ -247,16 +263,16 @@ export default function Auth() {
           disabled={needsRole}
           className={`w-full mt-5 py-3 rounded-xl font-bold text-white text-sm transition-all
             disabled:opacity-40 disabled:cursor-not-allowed ${
-            isVendor
-              ? "bg-[#97C040] hover:bg-[#7ea832]"
-              : "bg-[#177529] hover:bg-[#135c21]"
-          }`}
+              isVendor
+                ? "bg-[#97C040] hover:bg-[#7ea832]"
+                : "bg-[#177529] hover:bg-[#135c21]"
+            }`}
         >
           {mode === "signIn"
             ? "Continue to Sign In →"
             : role
-            ? `Continue as ${role === "user" ? "Buyer" : "Vendor"} →`
-            : "Select your account type to continue"}
+              ? `Continue as ${role === "user" ? "Buyer" : "Vendor"} →`
+              : "Select your account type to continue"}
         </button>
       </div>
 
@@ -282,7 +298,11 @@ export default function Auth() {
         >
           ← Back
         </button>
-        <img src={getImageUrl(logo)} alt="Campus Katale" className="h-10 w-auto" />
+        <img
+          src={getImageUrl(logo)}
+          alt="Campus Katale"
+          className="h-10 w-auto"
+        />
         {/* Role pill — shows actual role for sign-in, chosen role for sign-up */}
         <div
           className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full ${
@@ -303,7 +323,9 @@ export default function Auth() {
         }`}
       >
         <button
-          onClick={() => { handleModeChange("signIn"); }}
+          onClick={() => {
+            handleModeChange("signIn");
+          }}
           className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
             mode === "signIn"
               ? isVendor
@@ -315,7 +337,9 @@ export default function Auth() {
           Sign In
         </button>
         <button
-          onClick={() => { handleModeChange("signUp"); }}
+          onClick={() => {
+            handleModeChange("signUp");
+          }}
           className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
             mode === "signUp"
               ? isVendor

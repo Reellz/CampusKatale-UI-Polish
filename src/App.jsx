@@ -11,6 +11,7 @@ import Wishlist from "./pages/Wishlist";
 import Notifications from "./pages/Notifications";
 import VendorPending from "./pages/VendorPending";
 import VendorDashboard from "./pages/VendorDashboard"; 
+import VendorOnboarding from "./pages/VendorOnboarding";
 
 // Generic auth guard
 function ProtectedRoute({ children }) {
@@ -125,6 +126,15 @@ function App() {
           <RoleGuard allowedRoles={["vendor"]} fallback="/auth">
             {/* Replace the placeholder below with <VendorDashboard /> when built */}
             <VendorDashboard />
+          </RoleGuard>
+        }
+      />
+      <Route
+        path="/vendor/onboarding"
+        element={
+          <RoleGuard allowedRoles={["vendor"]} fallback="/auth">
+            {/* Replace the placeholder below with <VendorDashboard /> when built */}
+            <VendorOnboarding />
           </RoleGuard>
         }
       />
