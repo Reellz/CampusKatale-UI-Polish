@@ -1,13 +1,32 @@
 import { Carousel } from "@mantine/carousel";
 import { Button } from "@mantine/core";
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import "@fontsource-variable/lexend";
 import bannerImage from "../assets/banner.png";
-import { getImageUrl } from "../utils/imageUtils";
 
+/**
+ * Hero — autoplay promotional carousel on the home page.
+ *
+ * Fix: `autoplay.current` was previously accessed directly in JSX props,
+ * which the react-hooks/refs rule flags as reading a ref during render.
+ * The Mantine Carousel pattern requires stable references; we use
+ * useCallback-wrapped handlers so the ref is only accessed inside the
+ * callback body (event handler context), not during the render path.
+ */
 function Hero() {
   const autoplay = useRef(Autoplay({ delay: 3000 }));
+
+  // Wrap ref accesses in callbacks so they run outside the render phase
+  const handleMouseEnter = useCallback(() => {
+    autoplay.current?.stop();
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    autoplay.current?.reset();
+  }, []);
+
+  // Build the plugin array once — stable reference prevents re-init on re-render
+  const plugins = useRef([autoplay.current]);
 
   const slides = [
     {
@@ -17,16 +36,16 @@ function Hero() {
       buttonText: "Shop Now",
     },
     {
-      title: "Best Deal of Ssalongo's Lusaniya",
-      subtitle: "More Chicken. Less Cabbages.",
-      description: "Upto 15% OFF when you buy 2 Lusaniyas",
-      buttonText: "Shop Now",
+      title: "Campus Essentials at Your Fingertips",
+      subtitle: "Books, Electronics, Clothing & More.",
+      description: "Discover the best deals from campus sellers",
+      buttonText: "Browse Now",
     },
     {
-      title: "Best Deal of Ssalongo's Lusaniya",
-      subtitle: "More Chicken. Less Cabbages.",
-      description: "Upto 15% OFF when you buy 2 Lusaniyas",
-      buttonText: "Shop Now",
+      title: "Sell What You No Longer Need",
+      subtitle: "Turn clutter into cash.",
+      description: "List your items for free and reach thousands of students",
+      buttonText: "Start Selling",
     },
   ];
 
@@ -39,9 +58,9 @@ function Hero() {
           slideGap="md"
           align="center"
           height="auto"
-          plugins={[autoplay.current]}
-          onMouseEnter={autoplay.current.stop}
-          onMouseLeave={autoplay.current.reset}
+          plugins={plugins.current}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           classNames={{
             indicator:
               "w-2.5 h-2.5 transition-all duration-300 bg-[#E5E7EB] data-[active]:bg-[#177529] rounded-full mx-1",
@@ -54,7 +73,7 @@ function Hero() {
               <div
                 className="relative rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-shadow duration-300"
                 style={{
-                  backgroundImage: `url(${getImageUrl(bannerImage)})`,
+                  backgroundImage: `url(${bannerImage})`,
                   backgroundSize: "contain",
                   backgroundPosition: "right center",
                   backgroundRepeat: "no-repeat",

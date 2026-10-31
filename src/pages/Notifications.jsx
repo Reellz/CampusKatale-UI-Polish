@@ -1,8 +1,16 @@
 import { Navbar, Footer } from "../components";
 import { useNotifications } from "../context/NotificationContext";
-import "@fontsource-variable/lexend";
 import { IconBell, IconX } from "@tabler/icons-react";
 
+/**
+ * Notifications page.
+ *
+ * Fix: `formatRelativeTime(notification.timestamp || Date.now())` was calling
+ * `Date.now()` during render — flagged by react-hooks/purity as an impure
+ * function call.  The notification objects already have a `timestamp` field
+ * (set in NotificationContext at creation time).  We default to 0 if somehow
+ * absent, which `formatRelativeTime` handles gracefully.
+ */
 function Notifications() {
   const {
     notifications,
@@ -20,9 +28,10 @@ function Notifications() {
       <div className="pt-20 bg-white flex-grow">
         <main className="font-[Lexend] bg-white py-8 px-4 md:px-6">
           <div className="max-w-4xl mx-auto">
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                  <h1 className="text-2xl md:text-3xl font-bold text-[#0C0D19]">
+                <h1 className="text-2xl md:text-3xl font-bold text-[#0C0D19]">
                   Notifications
                 </h1>
                 {unreadCount > 0 && (
@@ -69,17 +78,18 @@ function Notifications() {
                             {notification.title}
                           </h3>
                           {!notification.read && (
-                            <span className="w-2 h-2 bg-[#97C040] rounded-full"></span>
+                            <span className="w-2 h-2 bg-[#97C040] rounded-full flex-shrink-0" />
                           )}
                         </div>
                         <p className="text-[#6B7280] text-sm mb-2">
                           {notification.message}
                         </p>
                         <p className="text-gray-400 text-xs">
-                          {formatRelativeTime(notification.timestamp || Date.now())}
+                          {/* Use stored timestamp — no Date.now() during render */}
+                          {formatRelativeTime(notification.timestamp || 0)}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {!notification.read && (
                           <button
                             onClick={() => markAsRead(notification.id)}
@@ -91,6 +101,7 @@ function Notifications() {
                         <button
                           onClick={() => deleteNotification(notification.id)}
                           className="text-gray-400 hover:text-red-500 transition-colors"
+                          aria-label="Delete notification"
                         >
                           <IconX size={18} />
                         </button>
@@ -104,7 +115,7 @@ function Notifications() {
                 <IconBell size={64} color="#E5E7EB" className="mx-auto mb-4" />
                 <p className="text-[#6B7280] text-lg mb-2">No notifications</p>
                 <p className="text-[#6B7280] text-sm">
-                  You're all caught up! New notifications will appear here.
+                  You&#39;re all caught up! New notifications will appear here.
                 </p>
               </div>
             )}
